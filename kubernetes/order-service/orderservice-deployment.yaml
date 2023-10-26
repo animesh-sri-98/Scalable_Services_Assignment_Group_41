@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-microservice
+  template:
+    metadata:
+      labels:
+        app: order-microservice
+    spec:
+      containers:
+      - name: order-microservice
+        image: animeshsri98/order-microservice:latest
+        ports:
+        - containerPort: 9997

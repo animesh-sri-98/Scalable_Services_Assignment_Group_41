@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-pods
+  namespace: default   # Change this to your namespace if it's not the default namespace
+spec:
+  podSelector: {}       # Empty podSelector selects all pods in the namespace
+  ingress:
+  - {}
+  egress:
+  - {}
+  policyTypes:
+  - Ingress
+  - Egress

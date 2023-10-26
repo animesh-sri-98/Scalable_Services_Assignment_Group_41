@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-microservice
+  template:
+    metadata:
+      labels:
+        app: user-microservice
+    spec:
+      containers:
+      - name: flask-app
+        image: animeshsri98/flask-app-image:latest
+        ports:
+        - containerPort: 9998

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-microservice
+  labels:                           # Added labels section
+    app: order-microservice   
+spec:
+  selector:
+    app: order-microservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9997
+  type: LoadBalancer # Use LoadBalancer type if you are on a cloud provider that supports it

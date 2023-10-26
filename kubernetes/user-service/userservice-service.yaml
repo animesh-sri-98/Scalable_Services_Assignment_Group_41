@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-microservice
+  labels:                           # Added labels section
+    app: user-microservice 
+spec:
+  selector:
+    app: user-microservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9998
+  type: LoadBalancer # Use LoadBalancer type if you are on a cloud provider that supports it

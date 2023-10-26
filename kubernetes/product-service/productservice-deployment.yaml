@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-microservice
+  template:
+    metadata:
+      labels:
+        app: product-microservice
+    spec:
+      containers:
+      - name: product-microservice
+        image: animeshsri98/product-microservice:latest
+        ports:
+        - containerPort: 9996
