@@ -40,6 +40,12 @@ def create_user():
     }
     return jsonify(response), 201
 
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    # Retrieve all users from MongoDB
+    users = list(collection.find({}, {"_id": 0}))
+    return jsonify(users), 200
+
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     # Retrieve user details from MongoDB based on user_id
@@ -55,6 +61,39 @@ def get_user(user_id):
     else:
         # User not found, return 404 response
         return jsonify({"message": "User not found"}), 404
+    
+@app.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    new_username = data.get('username')
+    new_email = data.get('email')
+
+    # Validate input fields
+    if not new_username or not isinstance(new_username, str) or not new_email or not isinstance(new_email, str):
+        return jsonify({"message": "Invalid input data"}), 400
+
+    # Update user details in MongoDB based on user_id
+    user = collection.find_one({"user_id": user_id})
+    if user:
+        user['username'] = new_username
+        user['email'] = new_email
+        collection.update_one({"user_id": user_id}, {"$set": user})
+        return jsonify({"message": "User details updated successfully"}), 200
+    else:
+        # User not found, return 404 response
+        return jsonify({"message": "User not found"}), 404
+    
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    # Delete user from MongoDB based on user_id
+    result = collection.delete_one({"user_id": user_id})
+
+    if result.deleted_count > 0:
+        return jsonify({"message": "User deleted successfully"}), 200
+    else:
+        # User not found, return 404 response
+        return jsonify({"message": "User not found"}), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=9998)

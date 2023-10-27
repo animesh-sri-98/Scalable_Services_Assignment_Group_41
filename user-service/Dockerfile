@@ -15,4 +15,4 @@ EXPOSE 9998
 
 
 # Command to run the application when the container starts
-CMD ["python3", "app.py"]
+CMD ["python3", "users.py"]
