@@ -33,6 +33,34 @@ def create_product():
     }
     return jsonify(response), 201
 
+@app.route('/products', methods=['GET'])
+def get_all_products():
+    products = list(collection.find({}, {"_id": 0}))
+    return jsonify(products), 200
+
+@app.route('/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    data = request.get_json()
+    product_name = data.get('product_name')
+    price = data.get('price')
+
+    # Validate input fields
+    if not product_name or not isinstance(price, (int, float)):
+        return jsonify({"message": "Invalid input data"}), 400
+
+    # Update product details based on product_id
+    result = collection.update_one(
+        {"product_id": product_id},
+        {"$set": {"product_name": product_name, "price": price}}
+    )
+
+    if result.modified_count > 0:
+        return jsonify({"message": "Product updated successfully"}), 200
+    else:
+        # Product not found, return 404 response
+        return jsonify({"message": "Product not found"}), 404
+
+
 @app.route('/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
     # Retrieve product details based on product_id from MongoDB
