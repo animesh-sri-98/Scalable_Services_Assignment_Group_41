@@ -13,7 +13,7 @@ spec:
         app: user-microservice
     spec:
       containers:
-      - name: flask-app
-        image: animeshsri98/flask-app-image:latest
+      - name: user-microservice
+        image: animeshsri98/user-microservice:latest
         ports:
         - containerPort: 9998

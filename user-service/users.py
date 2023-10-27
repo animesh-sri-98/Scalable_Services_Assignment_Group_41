@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
+import requests
 
 app = Flask(__name__)
 print("connecting to mongodb server")
@@ -61,6 +62,18 @@ def get_user(user_id):
     else:
         # User not found, return 404 response
         return jsonify({"message": "User not found"}), 404
+    
+@app.route('/users/<int:user_id>/orders', methods=['GET'])
+def get_orders_by_user_id(user_id):
+    # Retrieve orders for a specific user based on user_id
+    order_url = f'http://order-microservice:80/orders/{user_id}'
+
+    try:
+        order_response = requests.get(order_url, timeout=5)
+        order_response.raise_for_status()  # Raise HTTPError for bad responses (4xx and 5xx)
+        return jsonify(order_response.json()), 200
+    except requests.exceptions.RequestException as e:
+        return jsonify({"message": "Error fetching orders"}), 500
     
 @app.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
