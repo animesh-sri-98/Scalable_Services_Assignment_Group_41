@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from pymongo import MongoClient
 import requests
 
@@ -14,6 +14,10 @@ if last_user:
     last_user_id = last_user["user_id"]
 else:
     last_user_id = 0
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/users', methods=['POST'])
 def create_user():

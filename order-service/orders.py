@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import random
 from pymongo import MongoClient
 import requests
@@ -10,6 +10,10 @@ print("connecting to mongodb server")
 client = MongoClient("mongodb://mongodb-service:27017/")
 db = client["orders_db"]
 collection = db["orders"]
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/orders', methods=['POST'])
@@ -45,6 +49,24 @@ def get_all_orders():
             "status": order["status"]
         })
     return jsonify(response), 200
+
+@app.route('/orders/<int:order_id>', methods=['GET'])
+def get_order_by_order_id(order_id):
+    # Retrieve orders based on user_id from MongoDB
+    order = collection.find({"order_id": order_id})
+
+    if order:
+        response = {
+                "order_id": order["order_id"],
+                "user_id": order["user_id"],
+                "product_id": order["product_id"],  # Added product_id to the response
+                "status": order["status"]
+            }
+        return jsonify(response), 200
+    else:
+        # Orders not found, return 404 response
+        return jsonify({"message": "Orders not found"}), 404
+
 
 
 
